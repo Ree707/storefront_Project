@@ -14,7 +14,7 @@ describe('test product endpoint api', ()=> {
         expect(response.status).toBe(200);
     });
     it('get the endpoint to show one product', async ()=>{
-        const response = await request.get('/api/product/product');
+        const response = await request.get('/api/product/');
         expect(response.status).toBe(200);
     });
    

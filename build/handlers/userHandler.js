@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,97 +49,91 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
-//In each handler file, create RESTful endpoints for each model method.
-var express_1 = require("express");
-var user_1 = require("../../models/user");
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authenticate = exports.create = exports.show = exports.index = void 0;
+var user_1 = require("../models/user");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+var TOKEN_SECRET = process.env.TOKEN_SECRET;
 //export const userHandler = express.Router();
-var User = new user_1.userStore();
+var user_store = new user_1.userStore();
 //index all users 
-var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var users, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, User.getAllusers()];
+                console.log('index');
+                _a.label = 1;
             case 1:
-                users = _a.sent();
-                res.json(users);
-                return [3 /*break*/, 3];
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, user_store.getAllusers()];
             case 2:
+                users = _a.sent();
+                res.json({ status: 'success',
+                    data: { users: users },
+                    message: 'display all users in database' });
+                return [3 /*break*/, 4];
+            case 3:
                 err_1 = _a.sent();
                 res.status(400);
                 res.json(err_1);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.index = index;
+//show one user by id 
+var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, user, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                id = parseInt(req.body.id);
+                return [4 /*yield*/, user_store.showUser(id)];
+            case 1:
+                user = _a.sent();
+                if (user === undefined) {
+                    res.json('no user found');
+                }
+                res.json(user);
+                return [3 /*break*/, 3];
+            case 2:
+                err_2 = _a.sent();
+                res.status(400);
+                res.json(err_2);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
-//show one user by id 
-var show = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var authorizationHeader, token, id, user, err_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                try {
-                    authorizationHeader = _req.headers.authorization;
-                    token = authorizationHeader.split(' ')[1];
-                    jsonwebtoken_1["default"].verify(token, process.env.TOKEN_SECRET);
-                }
-                catch (err) {
-                    res.status(401);
-                    res.json('Access denied, invalid token');
-                    return [2 /*return*/];
-                }
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                id = parseInt(_req.params.id);
-                return [4 /*yield*/, User.showUser(id)];
-            case 2:
-                user = _a.sent();
-                res.json(user);
-                return [3 /*break*/, 4];
-            case 3:
-                err_2 = _a.sent();
-                res.status(400);
-                res.json(err_2);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
+exports.show = show;
 //create new user
-var create = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userInfo, user, token, err_3;
+var create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                userInfo = {
-                    firstName: _req.body.firstName,
-                    lastName: _req.body.lastName,
-                    password: _req.body.password
-                };
-                _a.label = 1;
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, user_store.createUser(req.body)];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, User.createUser(_req.body)];
-            case 2:
                 user = _a.sent();
-                token = jsonwebtoken_1["default"].sign({ user: user }, process.env.TOKEN_SECRET);
-                res.json(token);
-                return [3 /*break*/, 4];
-            case 3:
+                // var token = jwt.sign({user:user}, process.env.TOKEN_SECRET);
+                res.json(user);
+                return [3 /*break*/, 3];
+            case 2:
                 err_3 = _a.sent();
                 res.status(400);
                 res.json(err_3);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
+exports.create = create;
 //token authenticate 
 var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var user, u, token, error_1;
@@ -137,17 +142,29 @@ var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0
             case 0:
                 user = {
                     id: req.body.id,
-                    password: req.body.password
+                    password: req.body.password,
                 };
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, User.authenticate(user.id, user.password)];
+                return [4 /*yield*/, user_store.authenticate(user.id, user.password)];
             case 2:
                 u = _a.sent();
-                token = jsonwebtoken_1["default"].sign({ user: u }, process.env.TOKEN_SECRET);
-                res.json(token);
-                return [3 /*break*/, 4];
+                token = jsonwebtoken_1.default.sign({ u: u }, TOKEN_SECRET);
+                //if user not authenticated 
+                if (!u) {
+                    console.log('an error');
+                    return [2 /*return*/, res.status(401).json({
+                            status: 'error',
+                            message: 'the id and password do not match'
+                        })];
+                }
+                //if user is authenticated 
+                return [2 /*return*/, res.json({
+                        status: 'success',
+                        data: __assign(__assign({}, u), { token: token }),
+                        message: 'user authenticated successfully',
+                    })];
             case 3:
                 error_1 = _a.sent();
                 res.status(401);
@@ -157,41 +174,4 @@ var authenticate = function (req, res) { return __awaiter(void 0, void 0, void 0
         }
     });
 }); };
-var userHandler = express_1.Router();
-userHandler.get('/', index);
-userHandler.get('/users/:id', show);
-userHandler.post('/users', create);
-exports["default"] = userHandler;
-/*
-userHandler.get('/users', async (_req: Request, res: Response) =>{
-    try {
-         const users= await User.getAllusers();
-         return res.json(users);
-    } catch (err) {
-         res.status(400)
-        res.json(err)
-    }
-})
-
-
-userHandler.get('/users/:id', async (_req: Request, res: Response) =>{
-    try {
-         const id: Number = parseInt(req.params.id);
-         const user: user= await User.showUser(id);
-         return res.json(user);
-    } catch (err) {
-         res.status(400)
-        res.json(err)
-    }
-})
-
-userHandler.post('/users', async (_req: Request, res: Response) =>{
-    try {
-         const user: user = await User.createUser(req.body);
-         return res.json(user);
-    } catch (err) {
-         res.status(400)
-        res.json(err)
-    }
-})
-*/
+exports.authenticate = authenticate;

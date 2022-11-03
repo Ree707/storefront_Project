@@ -38,57 +38,46 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.__esModule = true;
-var order_1 = require("../../models/order");
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-//export const orderHandler = express.Router();
-var Order = new order_1.orderStore();
-//get current order by user
-var get = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var authorizationHeader, token, userID, userOrder, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                try {
-                    authorizationHeader = _req.headers.authorization;
-                    token = authorizationHeader.split(' ')[1];
-                    jsonwebtoken_1["default"].verify(token, process.env.TOKEN_SECRET);
-                }
-                catch (err) {
-                    res.status(401);
-                    res.json('Access denied, invalid token');
+Object.defineProperty(exports, "__esModule", { value: true });
+//Create a test suite that covers each endpoint with Jasmine.
+var supertest_1 = __importDefault(require("supertest"));
+var server_1 = __importDefault(require("../../server"));
+var request = (0, supertest_1.default)(server_1.default);
+describe('test product endpoint api', function () {
+    it('get the endpoint to show all product', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/product/all')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
                     return [2 /*return*/];
-                }
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                userID = parseInt(_req.params.userID);
-                return [4 /*yield*/, Order.getActiveOrder(userID)];
-            case 2:
-                userOrder = _a.sent();
-                jsonwebtoken_1["default"].verify(_req.body.token, process.env.TOKEN_SECRET);
-                res.json(userOrder);
-                return [3 /*break*/, 4];
-            case 3:
-                err_1 = _a.sent();
-                res.status(400);
-                res.json(err_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
-/*orderHandler.get('/order/:userID', async (_req: Request, res: Response) =>{
-    try {
-         const userID: Number =parseInt(req.params.userID);
-         const userOrder: order []= await Order.getActiveOrder(userID);
-         return res.json(userOrder);
-    } catch (err) {
-         res.status(400)
-        res.json(err)
-    }
-})*/
-var orderHandler = function (app) {
-    app.get('/order/:userID', get);
-};
-exports["default"] = orderHandler;
+            }
+        });
+    }); });
+    it('get the endpoint to create product', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.post('/api/product/create')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('get the endpoint to show one product', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/product/')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});

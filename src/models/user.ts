@@ -11,7 +11,6 @@ firstName: string;
 lastName: string; 
 user_password: string;}
 export class userStore {
-
     //Index [token required]
      async getAllusers(): Promise<string> {
       

@@ -7,7 +7,7 @@ const routes = Router();
 
 routes.use('/users',userRoute);
 routes.use('/order',orderRoute);
-routes.use('/products',productRoute);
+routes.use('/product',productRoute);
 
 routes.get('/',  (req: Request, res: Response) =>{
     res.send('api');
