@@ -6,7 +6,8 @@ const userRoute  = Router();
 
 userRoute.get('/all',validateToken,handlers.index);
 userRoute.get('/user',validateToken,handlers.show);
-userRoute.post('/create',validateToken,handlers.create);
+userRoute.post('/create',handlers.create);
+//log in 
 userRoute.post('/authenticate',handlers.authenticate);
 
 userRoute.get('/',  (req: Request, res: Response) =>{

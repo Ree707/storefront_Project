@@ -10,6 +10,8 @@ then i run these commands:
 6- \connect shopping_test shopping_user localhost;
 7- GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_user;
 
+Database port: 5432
+
 Create database.json file with the following: 
 {
   "dev": {

@@ -4,8 +4,8 @@ import validateToken from '../../middleware/authentication.middleware'
 
 const productRoute  = Router();
 
-productRoute.get('/all',handlers.index);
-productRoute.get('/product',handlers.show);
+productRoute.get('/all',validateToken,handlers.index);
+productRoute.get('/product',validateToken,handlers.show);
 productRoute.post('/create',validateToken,handlers.create);
 
 productRoute.get('/',  (req: Request, res: Response) =>{
