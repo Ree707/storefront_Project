@@ -23,5 +23,4 @@ export class orderStore {
       throw new Error(`Cannot get current orders`);
     }
   }
-
 }
